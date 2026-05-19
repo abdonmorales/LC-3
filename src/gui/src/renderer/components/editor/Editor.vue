@@ -78,8 +78,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import Vuetify from "vuetify";
 import AceEditor from "./AceEditor";
 import "./lc3";
 import "brace/mode/html";
@@ -87,8 +85,6 @@ import "brace/mode/javascript";
 import "brace/mode/less";
 import "brace/theme/textmate";
 import "brace/theme/twilight";
-
-Vue.use(Vuetify);
 
 const { dialog, file, lc3 } = window.lc3tools;
 

@@ -24,10 +24,10 @@ export default defineConfig({
   renderer: {
     root: resolve(__dirname, 'src/renderer'),
     resolve: {
-      alias: {
-        '@': resolve(__dirname, 'src/renderer'),
-        'vue$': 'vue/dist/vue.esm.js'
-      }
+      alias: [
+        { find: '@', replacement: resolve(__dirname, 'src/renderer') },
+        { find: /^vue$/, replacement: resolve(__dirname, 'node_modules/vue/dist/vue.esm.js') }
+      ]
     },
     plugins: [vue()],
     build: {

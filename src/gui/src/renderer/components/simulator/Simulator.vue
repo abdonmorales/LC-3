@@ -249,11 +249,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-import Vuetify from "vuetify";
-
-Vue.use(Vuetify);
-
 const { dialog, file, lc3 } = window.lc3tools;
 
 export default {

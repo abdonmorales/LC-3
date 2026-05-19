@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuetify from 'vuetify'
 import axios from 'axios'
 
 import App from './App.vue'
@@ -7,6 +8,8 @@ import store from './store'
 
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'vuetify/dist/vuetify.min.css'
+
+Vue.use(Vuetify)
 
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
