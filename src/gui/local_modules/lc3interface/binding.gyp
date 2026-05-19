@@ -7,6 +7,7 @@
             ],
             'target_name': 'lc3interface',
             'sources': ['wrapper.cpp'],
+            'cflags_cc': ['-std=c++20'],
             'conditions': [
                 ['OS=="mac"', {
                     'xcode_settings': {
@@ -18,7 +19,6 @@
                     'link_settings': {
                         'libraries': ['<(module_root_dir)/../../../../build/lib/liblc3core.a']
                     },
-                    'cflags_cc': ['-std=c++20'],
                     'cflags!': ['-fno-exceptions'],
                     'cflags_cc!': ['-fno-exceptions'],
                 }],

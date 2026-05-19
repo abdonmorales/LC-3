@@ -39,19 +39,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y \
-            clang \
             cmake \
+            g++ \
             graphicsmagick \
             icnsutils \
             libfuse2 \
             xz-utils
-
-      - name: Use clang on Linux
-        if: runner.os == 'Linux'
-        run: |
-          echo "CC=clang" >> "$GITHUB_ENV"
-          echo "CXX=clang++" >> "$GITHUB_ENV"
-          echo "npm_config_clang=1" >> "$GITHUB_ENV"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -73,6 +66,8 @@ jobs:
 
       - name: Rebuild native Electron module
         working-directory: src/gui
+        env:
+          CXXFLAGS: ${{ runner.os == 'Linux' && '-std=c++20' || '' }}
         run: yarn rebuild:native:release
 
       - name: Build renderer and main processes
