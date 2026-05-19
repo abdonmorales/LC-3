@@ -6,7 +6,8 @@ import { join } from 'path'
 import lc3 from 'lc3interface'
 
 let mainWindow
-const isDev = process.env.NODE_ENV !== 'production'
+const isDev = Boolean(process.env.ELECTRON_RENDERER_URL)
+const shouldOpenDevTools = isDev || ['1', 'true'].includes((process.env.LC3TOOLS_OPEN_DEVTOOLS || '').toLowerCase())
 
 function sendToMainWindow(channel, ...args) {
   if (mainWindow && !mainWindow.isDestroyed()) {
@@ -38,6 +39,7 @@ function createWindow () {
       preload: join(__dirname, '../preload/preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      devTools: shouldOpenDevTools,
       sandbox: false
     }
   })
@@ -48,7 +50,7 @@ function createWindow () {
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.setTitle('LC3Tools v' + app.getVersion())
-    if (isDev) {
+    if (shouldOpenDevTools) {
       mainWindow.webContents.openDevTools({ mode: 'detach' })
     }
   })
@@ -62,7 +64,7 @@ function createWindow () {
   })
 
   mainWindow.webContents.on('console-message', (event) => {
-    if (isDev) {
+    if (shouldOpenDevTools) {
       console.log(`[renderer:${event.level}] ${event.sourceId}:${event.lineNumber} ${event.message}`)
     }
   })
