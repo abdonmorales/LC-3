@@ -78,15 +78,15 @@
 </template>
 
 <script>
-import { remote } from "electron";
-import path from "path";
-import Vue from "vue";
-import Vuetify from "vuetify";
-import fs from "fs";
+import AceEditor from "./AceEditor";
+import "./lc3";
+import "brace/mode/html";
+import "brace/mode/javascript";
+import "brace/mode/less";
+import "brace/theme/textmate";
+import "brace/theme/twilight";
 
-import * as lc3 from "lc3interface";
-
-Vue.use(Vuetify);
+const { dialog, file, lc3 } = window.lc3tools;
 
 export default {
   name: "editor",
@@ -102,46 +102,49 @@ export default {
     };
   },
   components: {
-    "ace-editor": require("vue2-ace-editor-electron")
+    "ace-editor": AceEditor
   },
   mounted() {
     // setInterval(this.autosaveFile, 5 * 60 * 1000);
   },
   methods: {
-    newFile(content) {
+    async newFile(content) {
       // Todo: try catch around this
-      let new_file = remote.dialog.showSaveDialog({
+      let new_file = await dialog.saveFile({
         filters: [{name: "Assembly", extensions: ["asm"]}, {name: "Binary", extensions: ["bin"]}]
       });
 
       // Guard against user cancelling
       if (new_file) {
-        fs.writeFileSync(new_file, content);
-        this.openFile(new_file);
+        file.writeText(new_file, content);
+        await this.openFile(new_file);
+        return true;
       }
+      return false;
     },
-    saveFile() {
+    async saveFile() {
       // Todo: try catch around this
       // If we don't have a file, create one
       if (this.$store.getters.activeFilePath === null) {
-        this.newFile(this.editor.current_content);
+        return this.newFile(this.editor.current_content);
       } else {
-        fs.writeFileSync(this.$store.getters.activeFilePath, this.editor.current_content);
+        file.writeText(this.$store.getters.activeFilePath, this.editor.current_content);
         this.editor.original_content = this.editor.current_content;
+        return true;
       }
     },
     autosaveFile() {
       if (this.$store.getters.activeFilePath !== null && this.editor.original_content !== this.editor.current_content) {
-        fs.writeFileSync(this.$store.getters.activeFilePath, this.editor.current_content);
+        file.writeText(this.$store.getters.activeFilePath, this.editor.current_content);
         this.editor.original_content = this.editor.current_content;
       }
     },
-    openFile(path) {
+    async openFile(path) {
       // Todo: try catch around this
       // if not given a path, open a dialog to ask user for file
       let selected_files = [];
       if (path === undefined || typeof path !== 'string') {
-        selected_files = remote.dialog.showOpenDialog({
+        selected_files = await dialog.openFile({
           properties: ["openFile"],
           filters: [{name: "Assembly", extensions: ["asm"]}, {name: "Binary", extensions: ["bin"]}]
         });
@@ -150,19 +153,24 @@ export default {
       }
 
       // Dialog returns an array of files, we only care about the first one
-      if (selected_files) {
+      if (selected_files && selected_files.length) {
         let active_file = selected_files[0];
-        this.editor.original_content = this.editor.current_content = fs.readFileSync(
-          active_file,
-          "utf-8"
-        );
+        this.editor.original_content = this.editor.current_content = file.readText(active_file);
         this.$store.commit('setActiveFilePath', active_file);
+        return true;
       }
+      return false;
     },
-    build() {
+    async build() {
       // save the file if it hasn't been saved
       if (this.editor.content_changed) {
-        this.saveFile();
+        const saved = await this.saveFile();
+        if (!saved) {
+          return;
+        }
+      }
+      if (this.$store.getters.activeFilePath === null) {
+        return;
       }
       let success = true
       if(this.$store.getters.activeFilePath.endsWith(".bin")) {
@@ -187,12 +195,6 @@ export default {
       }
     },
     editorInit(editor) {
-      require("./lc3");
-      require("brace/mode/html");
-      require("brace/mode/javascript");
-      require("brace/mode/less");
-      require("brace/theme/textmate");
-      require("brace/theme/twilight");
       editor.setShowPrintMargin(false);
       editor.setOptions({
         fontSize: "1.25em"
@@ -218,7 +220,7 @@ export default {
     getFilename() {
       return this.$store.getters.activeFilePath === null
         ? "Untitled"
-        : path.basename(this.$store.getters.activeFilePath);
+        : file.basename(this.$store.getters.activeFilePath);
     },
     darkMode() {
       return this.$store.getters.theme === "dark"

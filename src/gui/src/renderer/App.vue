@@ -57,9 +57,6 @@
                 </v-flex>
               </v-layout>
               <p class="text-red" v-if="settings.liberal_asm">May result in inconsistency with the grader.</p>
-              <v-layout row>
-                <v-flex grow><h4>Issues? Email chirag.sakhuja@utexas.edu</h4></v-flex>
-              </v-layout>
             </v-container>
           </v-card>
         </v-menu>
@@ -150,10 +147,7 @@
 </template>
 
 <script>
-import * as lc3 from "lc3interface";
-import {ipcRenderer, remote} from "electron";
-import path from "path";
-import fs from "fs";
+const { lc3, settings, updater } = window.lc3tools;
 
 export default {
   name: "lc3tools",
@@ -180,13 +174,13 @@ export default {
     };
   },
 
-  created() {
+  async created() {
     lc3.Init();
-    this.getSettings();
+    await this.getSettings();
   },
 
   mounted() {
-    ipcRenderer.on("auto_updater", (event, message, progress) => {
+    this.removeUpdaterListener = updater.onMessage((message, progress) => {
       if(message === "update_available") {
         // Show the settings modal
         this.update_dialog = ! this.settings.ignore_update;
@@ -200,29 +194,31 @@ export default {
     });
   },
 
+  beforeDestroy() {
+    if (this.removeUpdaterListener) {
+      this.removeUpdaterListener();
+    }
+  },
+
   methods: {
     // Updater
     updateConfirmed: function() {
       this.settings.ignore_update = false;
       this.saveSettings('ignore-update');
       this.download_bar = true;
-      ipcRenderer.send("auto_updater", "update_confirmed");
+      updater.confirmUpdate();
     },
-    getSettings: function() {
-      this.$storage.isPathExists("settings.json", (exists) => {
-        if(exists) {
-          this.$storage.get("settings.json", (err, data) => {
-            if(err) { console.error(err); }
-            else {
-              for(const key of Object.keys(data)) {
-                this.settings[key] = data[key]
-              }
-              this.settings.liberal_asm = false
-              this.updateGlobals('all')
-            }
-          });
+    getSettings: async function() {
+      try {
+        const data = await settings.get();
+        for(const key of Object.keys(data)) {
+          this.settings[key] = data[key]
         }
-      });
+        this.settings.liberal_asm = false
+        this.updateGlobals('all')
+      } catch(err) {
+        console.error(err);
+      }
     },
     downloadUpdate() {
       this.settings.ignore_update = false;
@@ -236,9 +232,9 @@ export default {
     },
     saveSettings: function(setting) {
       this.updateGlobals(setting)
-      this.$storage.set("settings.json", this.settings, (err) => {
-        if(err) { console.error(err); }
-      })
+      settings.set(this.settings).catch((err) => {
+        console.error(err);
+      });
     },
     updateGlobals: function(setting) {
       if(setting == 'all') {
