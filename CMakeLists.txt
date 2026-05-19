@@ -1,8 +1,12 @@
 cmake_minimum_required(VERSION 3.15)
 
+cmake_policy(SET CMP0091 NEW)
+
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "macOS build architectures" FORCE)
 endif()
+
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # set project name
 project(lc3tools)
@@ -24,7 +28,7 @@ if(NOT DEFINED MSVC)
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++14")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D_ENABLE_DEBUG /W3")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /MT /EHsc")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /EHsc")
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)

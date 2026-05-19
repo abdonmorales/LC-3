@@ -40,7 +40,7 @@ jobs:
             cmake \
             graphicsmagick \
             icnsutils \
-            libgnome-keyring-dev \
+            libfuse2 \
             xz-utils
 
       - name: Use clang on Linux
