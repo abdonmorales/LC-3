@@ -249,14 +249,7 @@
 </template>
 
 <script>
-import { remote } from "electron";
-import path from "path";
-import Vue from "vue";
-import Vuetify from "vuetify";
-import fs from "fs";
-import * as lc3 from "lc3interface";
-
-Vue.use(Vuetify);
+const { dialog, file, lc3 } = window.lc3tools;
 
 export default {
   name: "simulator",
@@ -322,18 +315,18 @@ export default {
       this.$store.getters.activeFileBuildTime > this.$store.getters.activeFileLoadTime)
     {
       let obj_file_name = asm_file_name.substr(0, asm_file_name.lastIndexOf(".")) + ".obj";
-      if(fs.existsSync(obj_file_name)) {
+      if(file.exists(obj_file_name)) {
         this.loadFile(obj_file_name);
       }
       this.$store.commit('touchActiveFileLoadTime')
     }
   },
   methods: {
-    openFile(path) {
+    async openFile(path) {
       // Todo: try catch around this
       let selectedFiles = [path];
       if (!path) {
-        selectedFiles = remote.dialog.showOpenDialog({
+        selectedFiles = await dialog.openFile({
           properties: ["openFile", "multiSelections"],
           filters: [{name: "Objects", extensions: ["obj"]}]
         });
@@ -357,7 +350,7 @@ export default {
       });
       this.updateUI();
     },
-    toggleSimulator(run_function_str) {
+    async toggleSimulator(run_function_str) {
       if(!this.poll_output_handle) {
         this.poll_output_handle = setInterval(this.updateConsole, 50)
       }
@@ -365,17 +358,16 @@ export default {
         lc3.ClearInput();
         this.sim.running = true;
         this.data_bg.backgroundColor = "lightgrey";
-        return new Promise((resolve, reject) => {
-          let callback = (error) => {
-            if(error) { reject(error); return; }
-            this.endSimulation(run_function_str != "run" || lc3.DidHitBreakpoint());
-            resolve();
-          };
-          if(run_function_str == "in") { lc3.StepIn(callback); }
-          else if(run_function_str == "out") { lc3.StepOut(callback); }
-          else if(run_function_str == "over") { lc3.StepOver(callback); }
-          else { lc3.Run(callback); }
-        });
+        try {
+          if(run_function_str == "in") { await lc3.StepIn(); }
+          else if(run_function_str == "out") { await lc3.StepOut(); }
+          else if(run_function_str == "over") { await lc3.StepOver(); }
+          else { await lc3.Run(); }
+          this.endSimulation(run_function_str != "run" || lc3.DidHitBreakpoint());
+        } catch(error) {
+          this.endSimulation(false);
+          throw error;
+        }
       } else {
         lc3.Pause();
         this.endSimulation(false);
@@ -439,7 +431,7 @@ export default {
             if(type == "reg") {
               data_cell.value = lc3.GetRegValue(data_cell.name);
             } else if(type == "mem") {
-              data_call.value = lc3.GetMemValue(data_cell.addr);
+              data_cell.value = lc3.GetMemValue(data_cell.addr);
             }
             return;
           }
