@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.15)
 
 option(BUILD_MACOS_UNIVERSAL "Build macOS universal binaries." OFF)
 if(APPLE AND BUILD_MACOS_UNIVERSAL)

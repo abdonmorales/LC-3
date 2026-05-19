@@ -7,7 +7,7 @@
 
 There are two build systems in place for LC3Tools. The command line tools and
 unit tests are built simultaneously and only require [CMake](https://cmake.org)
-and a C++11 compiler. The GUI additionally requires
+3.15 or newer and a C++11 compiler. The GUI additionally requires
 [NodeJS](https://nodejs.org/en/) 22 or newer and [Yarn](https://yarnpkg.com/en/).
 Everything can be built on any of the supported operating systems.
 
@@ -17,7 +17,7 @@ first.
 
 ## Command Line Tools and Unit Tests
 Building the command line tools and unit tests require
-[CMake](https://cmake.org) and a C++11 compiler to be installed. Building
+[CMake](https://cmake.org) 3.15 or newer and a C++11 compiler to be installed. Building
 instructions vary between [*NIX systems](BUILD.md#nix-system) (macOS and Linux)
 and [Windows](BUILD.md#windows).
 
