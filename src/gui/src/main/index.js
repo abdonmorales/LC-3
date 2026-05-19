@@ -61,9 +61,9 @@ function createWindow () {
     console.error('Renderer process gone:', details)
   })
 
-  mainWindow.webContents.on('console-message', (_event, level, message, line, sourceId) => {
+  mainWindow.webContents.on('console-message', (event) => {
     if (isDev) {
-      console.log(`[renderer:${level}] ${sourceId}:${line} ${message}`)
+      console.log(`[renderer:${event.level}] ${event.sourceId}:${event.lineNumber} ${event.message}`)
     }
   })
 
