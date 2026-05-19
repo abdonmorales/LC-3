@@ -57,9 +57,6 @@
                 </v-flex>
               </v-layout>
               <p class="text-red" v-if="settings.liberal_asm">May result in inconsistency with the grader.</p>
-              <v-layout row>
-                <v-flex grow><h4>Issues? Email chirag.sakhuja@utexas.edu</h4></v-flex>
-              </v-layout>
             </v-container>
           </v-card>
         </v-menu>
