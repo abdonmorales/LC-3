@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-option(BUILD_MACOS_UNIVERSAL "Build macOS universal binaries." OFF)
-if(APPLE AND BUILD_MACOS_UNIVERSAL)
+if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "macOS build architectures" FORCE)
 endif()
 

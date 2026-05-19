@@ -51,12 +51,11 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
-To build the macOS library for a universal Electron package, pass the universal
-option when configuring CMake:
+macOS builds are universal by default:
 
 ```
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MACOS_UNIVERSAL=ON ..
-cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MACOS_UNIVERSAL=ON ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 

@@ -18,6 +18,7 @@
     "postinstall": "electron-builder install-app-deps",
     "lc3": "electron-rebuild -f -w lc3interface",
     "rebuild:native": "electron-rebuild -f -w lc3interface",
+    "rebuild:native:release": "node scripts/rebuild-native-release.js",
     "rebuild:native:universal": "node scripts/rebuild-native-universal.js",
     "release": "electron-vite build && electron-builder --publish always"
   },
