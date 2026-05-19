@@ -8,7 +8,8 @@
 There are two build systems in place for LC3Tools. The command line tools and
 unit tests are built simultaneously and only require [CMake](https://cmake.org)
 3.15 or newer and a C++11 compiler. The GUI additionally requires
-[NodeJS](https://nodejs.org/en/) 22 or newer and [Yarn](https://yarnpkg.com/en/).
+[NodeJS](https://nodejs.org/en/) 22 or newer, [Yarn](https://yarnpkg.com/en/),
+and a C++20-capable compiler for the native Electron module.
 Everything can be built on any of the supported operating systems.
 
 The command line tools and unit tests can be built independently of the GUI.
@@ -83,9 +84,11 @@ using the keyboard shortcut `Ctrl+Shift+B`.
 [previous section](BUILD.md#command-line-tools-and-unit-tests).**
 
 The GUI is built on the [Electron](https://electronjs.org/) framework and thus
-requires [NodeJS](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/) to
-be installed. Once the tools are installed, you may invoke the following
-commands from the root directory (on all platforms):
+requires [NodeJS](https://nodejs.org/en/), [Yarn](https://yarnpkg.com/en/), and a
+C++20-capable compiler to be installed. The command line tools continue to build
+as C++11; C++20 is only required when rebuilding the native Electron module
+against Electron's headers. Once the tools are installed, you may invoke the
+following commands from the root directory (on all platforms):
 
 ```
 # Navigate to GUI directory
