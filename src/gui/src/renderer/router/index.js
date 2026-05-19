@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Editor from '@/components/editor/Editor.vue'
+import Simulator from '@/components/simulator/Simulator.vue'
 
 Vue.use(Router)
 
@@ -8,12 +10,12 @@ export default new Router({
     {
       path: '/editor',
       name: 'editor',
-      component: require('@/components/editor/Editor').default
+      component: Editor
     },
     {
       path: '/simulator',
       name: 'simulator',
-      component: require('@/components/simulator/Simulator').default
+      component: Simulator
     },
     {
       path: '*',

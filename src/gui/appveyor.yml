@@ -4,7 +4,7 @@ branches:
   only:
     - master
 
-image: Visual Studio 2017
+image: Visual Studio 2022
 platform:
   - x64
 
@@ -18,12 +18,12 @@ init:
   - git config --global core.autocrlf input
 
 install:
-  - ps: Install-Product node 8 x64
-  - git reset --hard HEAD
+  - ps: Install-Product node 24 x64
   - yarn
   - node --version
 
 build_script:
+  - yarn run pack
   - yarn build
 
 test: off

@@ -8,8 +8,8 @@
 There are two build systems in place for LC3Tools. The command line tools and
 unit tests are built simultaneously and only require [CMake](https://cmake.org)
 and a C++11 compiler. The GUI additionally requires
-[NodeJS](https://nodejs.org/en/) and [Yarn](https://yarnpkg.com/en/). Everything
-can be built on any of the supported operating systems.
+[NodeJS](https://nodejs.org/en/) 22 or newer and [Yarn](https://yarnpkg.com/en/).
+Everything can be built on any of the supported operating systems.
 
 The command line tools and unit tests can be built independently of the GUI.
 However, the GUI requires the command line tools and unit tests to be built
@@ -51,6 +51,15 @@ cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
+To build the macOS library for a universal Electron package, pass the universal
+option when configuring CMake:
+
+```
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MACOS_UNIVERSAL=ON ..
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_MACOS_UNIVERSAL=ON ..
+make
+```
+
 Relative to the root directory, the binaries for the command line tools and
 unit tests will be built under `build/bin/`, and the static library will be
 built under `build/lib/`.
@@ -84,7 +93,7 @@ commands from the root directory (on all platforms):
 cd src/gui
 # Install packages
 yarn
-# Build LC3Tools NodeJS module
+# Build LC3Tools native Electron module
 yarn lc3
 ```
 
@@ -107,6 +116,14 @@ yarn build
 The standalone executable will be produced in `src/gui/build/` and its
 format will depend on the operating system it is being built on (`.exe`,
 `.app.`, etc.).
+
+On macOS, `yarn build` produces a universal DMG. If you only want to build the
+universal macOS package explicitly, run:
+
+```
+yarn rebuild:native:universal
+yarn build:mac:universal
+```
 
 # Copyright Notice
 Copyright 2020 &copy; McGraw-Hill Education. All rights reserved. No
