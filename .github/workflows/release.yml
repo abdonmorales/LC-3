@@ -69,7 +69,7 @@ jobs:
 
       - name: Install GUI dependencies
         working-directory: src/gui
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-scripts
 
       - name: Rebuild native Electron module
         working-directory: src/gui
