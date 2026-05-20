@@ -4,16 +4,18 @@
 
     <!-- Sidebar -->
     <v-navigation-drawer
+      class="compact-sidebar"
       fixed
       mini-variant
+      :mini-variant-width="56"
       permanent
       app
     >
-      <v-list two-line>
+      <v-list>
         <v-tooltip right>
           <v-list-tile slot="activator" @click="openFile()">
             <v-list-tile-action>
-              <v-icon large>folder_open</v-icon>
+              <v-icon>folder_open</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Open File</span>
@@ -21,8 +23,8 @@
         <v-tooltip right>
           <v-list-tile slot="activator" @click="toggleSimulator('run')">
             <v-list-tile-action>
-              <v-icon v-if="!sim.running" large>play_arrow</v-icon>
-              <v-icon v-else large>pause</v-icon>
+              <v-icon v-if="!sim.running">play_arrow</v-icon>
+              <v-icon v-else>pause</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Run</span>
@@ -30,7 +32,7 @@
         <v-tooltip right>
           <v-list-tile slot="activator" @click="reloadFiles">
             <v-list-tile-action>
-              <v-icon large>refresh</v-icon>
+              <v-icon>refresh</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Reload Object Files</span>
@@ -38,7 +40,7 @@
         <v-tooltip right>
           <v-list-tile slot="activator" @click="toggleSimulator('over')">
             <v-list-tile-action>
-              <v-icon large>redo</v-icon>
+              <v-icon>redo</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Step Over</span>
@@ -46,7 +48,7 @@
         <v-tooltip right>
           <v-list-tile slot="activator" @click="toggleSimulator('in')">
             <v-list-tile-action>
-              <v-icon large>subdirectory_arrow_right</v-icon>
+              <v-icon>subdirectory_arrow_right</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Step In</span>
@@ -54,7 +56,7 @@
         <v-tooltip right>
           <v-list-tile slot="activator" @click="toggleSimulator('out')">
             <v-list-tile-action>
-              <v-icon large>subdirectory_arrow_left</v-icon>
+              <v-icon>subdirectory_arrow_left</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Step Out</span>
@@ -62,7 +64,7 @@
         <v-tooltip right>
           <v-list-tile slot="activator" @click="reinitializeMachine()">
             <v-list-tile-action>
-              <v-icon large>power_settings_new</v-icon>
+              <v-icon>power_settings_new</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Reinitialize Machine</span>
@@ -70,7 +72,7 @@
         <v-tooltip right>
           <v-list-tile slot="activator" @click="randomizeMachine()">
             <v-list-tile-action>
-              <v-icon large>shuffle</v-icon>
+              <v-icon>shuffle</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>Randomize Machine</span>
@@ -587,6 +589,17 @@ export default {
 </script>
 
 <style scoped>
+.compact-sidebar >>> .v-list__tile {
+  justify-content: center;
+  padding: 0;
+}
+
+.compact-sidebar >>> .v-list__tile__action {
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+}
+
 /* Utility classes */
 .text-center {
   text-align: center;

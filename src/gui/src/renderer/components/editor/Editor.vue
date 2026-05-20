@@ -4,16 +4,26 @@
 
     <!-- Sidebar -->
     <v-navigation-drawer
+      class="compact-sidebar"
       fixed
       mini-variant
+      :mini-variant-width="56"
       permanent
       app
     >
-      <v-list two-line>
+      <v-list>
+        <v-tooltip right>
+          <v-list-tile slot="activator" @click="openFile()">
+            <v-list-tile-action>
+              <v-icon>folder_open</v-icon>
+            </v-list-tile-action>
+          </v-list-tile>
+          <span>Open File</span>
+        </v-tooltip>
         <v-tooltip right>
           <v-list-tile slot="activator" @click="newFile('')">
             <v-list-tile-action>
-              <v-icon large>note_add</v-icon>
+              <v-icon>note_add</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span>New File</span>
@@ -22,7 +32,7 @@
           <v-list-tile slot="activator" @click="saveFile()">
             <v-list-tile-action>
               <v-badge color="orange darken-2" overlap>
-                <v-icon large>save</v-icon>
+                <v-icon>save</v-icon>
                 <span v-if="editor.content_changed" slot="badge"><strong>!</strong></span>
               </v-badge>
             </v-list-tile-action>
@@ -30,17 +40,9 @@
           <span>Save File</span>
         </v-tooltip>
         <v-tooltip right>
-          <v-list-tile slot="activator" @click="openFile()">
-            <v-list-tile-action>
-              <v-icon large>folder_open</v-icon>
-            </v-list-tile-action>
-          </v-list-tile>
-          <span>Open File</span>
-        </v-tooltip>
-        <v-tooltip right>
           <v-list-tile slot="activator" @click="build()">
             <v-list-tile-action>
-              <v-icon large>build</v-icon>
+              <v-icon>build</v-icon>
             </v-list-tile-action>
           </v-list-tile>
           <span v-if="this.$store.getters.activeFilePath === null">Assemble or Convert</span>
@@ -248,6 +250,23 @@ export default {
 </script>
 
 <style scoped>
+.compact-sidebar >>> .v-list__tile {
+  justify-content: center;
+  padding: 0;
+}
+
+.compact-sidebar >>> .v-list__tile__action {
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+}
+
+.compact-sidebar >>> .v-badge {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .container {
   padding: 12px;
 }
