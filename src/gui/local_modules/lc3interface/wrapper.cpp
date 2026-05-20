@@ -4,10 +4,6 @@
 #include <cstdint>
 #include <nan.h>
 
-#ifndef DEFAULT_PRINT_LEVEL
-    #define DEFAULT_PRINT_LEVEL 4
-#endif
-
 #include <algorithm>
 #include <memory>
 #include <mutex>
@@ -16,6 +12,14 @@
 #include "interface.h"
 #include "ui_printer.h"
 #include "ui_inputter.h"
+
+#ifndef DEFAULT_BUILD_PRINT_LEVEL
+    #define DEFAULT_BUILD_PRINT_LEVEL static_cast<uint32_t>(lc3::utils::PrintType::P_WARNING)
+#endif
+
+#ifndef DEFAULT_SIM_PRINT_LEVEL
+    #define DEFAULT_SIM_PRINT_LEVEL static_cast<uint32_t>(lc3::utils::PrintType::P_ERROR)
+#endif
 
 utils::UIPrinter printer;
 utils::UIInputter inputter;
@@ -62,9 +66,9 @@ public:
 NAN_METHOD(Init)
 {
     try {
-        as = std::make_shared<lc3::as>(printer, DEFAULT_PRINT_LEVEL, false);
-        conv = std::make_shared<lc3::conv>(printer, DEFAULT_PRINT_LEVEL);
-        sim = std::make_shared<lc3::sim>(printer, inputter, DEFAULT_PRINT_LEVEL);
+        as = std::make_shared<lc3::as>(printer, DEFAULT_BUILD_PRINT_LEVEL, false);
+        conv = std::make_shared<lc3::conv>(printer, DEFAULT_BUILD_PRINT_LEVEL);
+        sim = std::make_shared<lc3::sim>(printer, inputter, DEFAULT_SIM_PRINT_LEVEL);
         sim->registerCallback(lc3::core::CallbackType::BREAKPOINT,
             [](lc3::core::CallbackType, lc3::sim &) {
                 hit_breakpoint = true;
